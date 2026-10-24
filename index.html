@@ -1,25 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Absensi Siswa & Rekapan</title>
-    <!-- Tailwind CSS -->
+    <title>AbsensiSiswa Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
                     },
                     colors: {
                         brand: {
@@ -27,79 +21,135 @@
                             100: '#e0f2fe',
                             500: '#0284c7',
                             600: '#0369a1',
-                            700: '#075985',
+                            700: '#075985'
                         }
                     }
                 }
             }
-        }
+        };
     </script>
     <style>
+        :root {
+            --bg: #f8fafc;
+            --panel: #ffffff;
+            --border: #e2e8f0;
+            --muted: #64748b;
+            --brand: #0369a1;
+            --brand-strong: #075985;
+            --success: #10b981;
+            --info: #38bdf8;
+            --warning: #f59e0b;
+            --danger: #f87171;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+            color: #0f172a;
         }
+
+        .soft-card {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(148,163,184,0.2);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .nav-btn,
+        .nav-mob-btn,
+        .action-btn,
+        .chip-btn {
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active,
+        .nav-mob-btn.active {
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+        }
+
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
+
+        .table-row:hover {
+            background: #f8fafc;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            border: 1px solid transparent;
+        }
+
+        .status-pill.hadir { background: rgba(16,185,129,0.1); color: #047857; border-color: rgba(16,185,129,0.18); }
+        .status-pill.izin { background: rgba(56,189,248,0.1); color: #0369a1; border-color: rgba(56,189,248,0.18); }
+        .status-pill.sakit { background: rgba(245,158,11,0.12); color: #b45309; border-color: rgba(245,158,11,0.18); }
+        .status-pill.alpa { background: rgba(248,113,113,0.1); color: #b91c1c; border-color: rgba(248,113,113,0.18); }
+
+        input, select, button {
+            font: inherit;
+        }
+
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            .print-only {
-                display: block !important;
-            }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
             body {
                 background: white;
                 color: black;
             }
-            .card-box {
-                border: 1px solid #ccc !important;
+            .soft-card {
                 box-shadow: none !important;
+                border: 1px solid #d1d5db !important;
             }
         }
-        .print-only {
-            display: none;
-        }
+
+        .print-only { display: none; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
-
-    <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none no-print"></div>
 
-    <!-- Navigation Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 no-print">
+    <header class="bg-white/90 border-b border-slate-200 sticky top-0 z-30 no-print backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-3">
-                    <div class="bg-brand-600 text-white p-2 rounded-xl shadow-md">
-                        <i data-lucide="check-square" class="w-6 h-6"></i>
+            <div class="flex justify-between h-16 items-center gap-4">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md shrink-0">
+                        <i data-lucide="check-square" class="w-5 h-5"></i>
                     </div>
-                    <div>
-                        <h1 class="text-lg font-bold text-slate-900 leading-tight">AbsensiSiswa Pro</h1>
-                        <p class="text-xs text-slate-500">Sistem Presensi & Laporan Kehadiran</p>
+                    <div class="min-w-0">
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight truncate">AbsensiSiswa Pro</h1>
+                        <p class="text-[11px] text-slate-500">Sistem Presensi & Laporan Kehadiran</p>
                     </div>
                 </div>
 
-                <!-- Navigation Tabs -->
-                <nav class="hidden md:flex space-x-1 bg-slate-100 p-1 rounded-xl">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">
                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                         <span>Dashboard</span>
                     </button>
-                    <button onclick="switchTab('input-absensi')" id="nav-input-absensi" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    <button onclick="switchTab('input-absensi')" id="nav-input-absensi" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">
                         <i data-lucide="user-check" class="w-4 h-4"></i>
                         <span>Input Absensi</span>
                     </button>
-                    <button onclick="switchTab('rekapan')" id="nav-rekapan" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    <button onclick="switchTab('rekapan')" id="nav-rekapan" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">
                         <i data-lucide="file-bar-chart" class="w-4 h-4"></i>
                         <span>Rekapan & Laporan</span>
                     </button>
-                    <button onclick="switchTab('master-siswa')" id="nav-master-siswa" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    <button onclick="switchTab('master-siswa')" id="nav-master-siswa" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">
                         <i data-lucide="users" class="w-4 h-4"></i>
                         <span>Data Siswa</span>
                     </button>
                 </nav>
 
-                <!-- Date Info / Quick Action -->
                 <div class="flex items-center gap-3">
                     <div class="text-right hidden sm:block">
                         <div id="currentDateText" class="text-xs font-semibold text-slate-700"></div>
@@ -109,9 +159,8 @@
             </div>
         </div>
 
-        <!-- Mobile Navigation Menu -->
-        <div class="md:hidden border-t border-slate-200 px-2 py-2 flex justify-around bg-slate-50">
-            <button onclick="switchTab('dashboard')" id="nav-mob-dashboard" class="nav-mob-btn p-2 rounded-lg text-slate-600 flex flex-col items-center">
+        <div class="md:hidden border-t border-slate-200 px-2 py-2 flex justify-around bg-slate-50/90">
+            <button onclick="switchTab('dashboard')" id="nav-mob-dashboard" class="nav-mob-btn active p-2 rounded-lg text-slate-600 flex flex-col items-center">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[10px] mt-0.5">Dashboard</span>
             </button>
@@ -130,73 +179,68 @@
         </div>
     </header>
 
-    <!-- Main Content Body -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        <!-- ================= SECTION 1: DASHBOARD ================= -->
-        <section id="section-dashboard" class="tab-section hidden space-y-6">
-            <!-- Header Welcome -->
+        <section id="section-dashboard" class="tab-section active space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-brand-600 to-indigo-700 text-white p-6 rounded-2xl shadow-lg">
                 <div>
                     <h2 class="text-2xl font-bold">Selamat Datang di Portal Absensi</h2>
                     <p class="text-brand-100 text-sm mt-1">Ringkasan statistik kehadiran siswa hari ini secara real-time.</p>
                 </div>
-                <button onclick="switchTab('input-absensi')" class="bg-white text-brand-700 hover:bg-brand-50 px-4 py-2.5 rounded-xl font-semibold text-sm shadow flex items-center gap-2 transition-all">
+                <button onclick="switchTab('input-absensi')" class="bg-white text-brand-700 hover:bg-brand-50 px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg flex items-center gap-2 transition-all">
                     <i data-lucide="plus-circle" class="w-4 h-4"></i>
                     <span>Input Absensi Hari Ini</span>
                 </button>
             </div>
 
-            <!-- Stats Overview Cards -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="soft-card p-4 rounded-xl flex flex-col justify-between">
                     <div class="flex items-center justify-between text-slate-500 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider">Total Siswa</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider">Total Siswa</span>
                         <i data-lucide="users" class="w-4 h-4 text-blue-500"></i>
                     </div>
                     <div id="statTotalSiswa" class="text-2xl font-bold text-slate-900">0</div>
                     <span class="text-[11px] text-slate-400 mt-1">Terdaftar di sistem</span>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm flex flex-col justify-between">
+                <div class="soft-card p-4 rounded-xl border border-emerald-100 flex flex-col justify-between">
                     <div class="flex items-center justify-between text-emerald-600 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider">Hadir</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider">Hadir</span>
                         <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
                     </div>
                     <div id="statHadir" class="text-2xl font-bold text-emerald-600">0</div>
                     <span class="text-[11px] text-emerald-500 mt-1">Hari ini</span>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl border border-sky-100 shadow-sm flex flex-col justify-between">
+                <div class="soft-card p-4 rounded-xl border border-sky-100 flex flex-col justify-between">
                     <div class="flex items-center justify-between text-sky-600 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider">Izin</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider">Izin</span>
                         <i data-lucide="info" class="w-4 h-4 text-sky-500"></i>
                     </div>
                     <div id="statIzin" class="text-2xl font-bold text-sky-600">0</div>
                     <span class="text-[11px] text-sky-500 mt-1">Hari ini</span>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm flex flex-col justify-between">
+                <div class="soft-card p-4 rounded-xl border border-amber-100 flex flex-col justify-between">
                     <div class="flex items-center justify-between text-amber-600 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider">Sakit</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider">Sakit</span>
                         <i data-lucide="activity" class="w-4 h-4 text-amber-500"></i>
                     </div>
                     <div id="statSakit" class="text-2xl font-bold text-amber-600">0</div>
                     <span class="text-[11px] text-amber-500 mt-1">Hari ini</span>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm flex flex-col justify-between">
+                <div class="soft-card p-4 rounded-xl border border-rose-100 flex flex-col justify-between">
                     <div class="flex items-center justify-between text-rose-600 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider">Alpa</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider">Alpa</span>
                         <i data-lucide="x-circle" class="w-4 h-4 text-rose-500"></i>
                     </div>
                     <div id="statAlpa" class="text-2xl font-bold text-rose-600">0</div>
                     <span class="text-[11px] text-rose-500 mt-1">Tanpa keterangan</span>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col justify-between">
+                <div class="soft-card p-4 rounded-xl border border-indigo-100 flex flex-col justify-between">
                     <div class="flex items-center justify-between text-indigo-600 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider">% Kehadiran</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider">% Kehadiran</span>
                         <i data-lucide="percent" class="w-4 h-4 text-indigo-500"></i>
                     </div>
                     <div id="statPersentase" class="text-2xl font-bold text-indigo-600">0%</div>
@@ -204,9 +248,8 @@
                 </div>
             </div>
 
-            <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
+                <div class="soft-card p-5 rounded-2xl lg:col-span-2">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold text-slate-800 text-base">Tren Kehadiran (7 Hari Terakhir)</h3>
                         <span class="text-xs text-slate-400">Semua Kelas</span>
@@ -216,7 +259,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="soft-card p-5 rounded-2xl">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold text-slate-800 text-base">Distribusi Status Hari Ini</h3>
                     </div>
@@ -227,11 +270,8 @@
             </div>
         </section>
 
-
-        <!-- ================= SECTION 2: INPUT ABSENSI ================= -->
-        <section id="section-input-absensi" class="tab-section hidden space-y-6">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <!-- Filters Header -->
+        <section id="section-input-absensi" class="tab-section space-y-6">
+            <div class="soft-card p-5 rounded-2xl">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                     <div>
                         <h2 class="text-lg font-bold text-slate-900">Input Kehadiran Siswa</h2>
@@ -241,26 +281,25 @@
                     <div class="flex flex-wrap items-center gap-3">
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal</label>
-                            <input type="date" id="inputAbsensiDate" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <input type="date" id="inputAbsensiDate" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
                         </div>
 
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">Pilih Kelas</label>
                             <select id="inputAbsensiClass" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                                <!-- Options dynamically loaded -->
                             </select>
                         </div>
 
                         <div class="self-end pt-1">
                             <button onclick="loadAttendanceInputTable()" class="px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700 transition flex items-center gap-1.5">
-                                <i data-lucide="filter" class="w-4 h-4"></i> Tampilkan
+                                <i data-lucide="filter" class="w-4 h-4"></i>
+                                <span>Tampilkan</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quick Batch Actions -->
-                <div class="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-100 bg-slate-50/50 -mx-5 px-5 my-2">
+                <div class="flex flex-wrap items-center justify-between gap-3 py-3 border-b border-slate-100 bg-slate-50/60 -mx-5 px-5 my-3">
                     <span class="text-xs font-semibold text-slate-600">Aksi Cepat:</span>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="setAllAttendance('Hadir')" class="px-3 py-1 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 text-xs font-medium rounded-md transition flex items-center gap-1">
@@ -278,7 +317,6 @@
                     </div>
                 </div>
 
-                <!-- Table Input -->
                 <div class="overflow-x-auto mt-4">
                     <table class="w-full text-left text-sm border-collapse">
                         <thead>
@@ -290,29 +328,22 @@
                                 <th class="p-3 font-semibold">Catatan / Keterangan</th>
                             </tr>
                         </thead>
-                        <tbody id="attendanceInputTbody" class="divide-y divide-slate-200">
-                            <!-- Dynamically Generated Row Data -->
-                        </tbody>
+                        <tbody id="attendanceInputTbody" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
 
-                <!-- Footer Save Action -->
-                <div class="mt-6 flex justify-between items-center pt-4 border-t border-slate-200">
-                    <div class="text-xs text-slate-500">
-                        * Pastikan klik tombol Simpan Absensi setelah mengubah status kehadiran.
-                    </div>
+                <div class="mt-6 flex justify-between items-center pt-4 border-t border-slate-200 gap-4">
+                    <div class="text-xs text-slate-500">* Pastikan klik tombol Simpan Absensi setelah mengubah status kehadiran.</div>
                     <button onclick="saveAttendanceRecord()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-md transition flex items-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4"></i> Simpan Data Absensi
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>Simpan Data Absensi</span>
                     </button>
                 </div>
             </div>
         </section>
 
-
-        <!-- ================= SECTION 3: REKAPAN & LAPORAN ================= -->
-        <section id="section-rekapan" class="tab-section hidden space-y-6">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <!-- Filters Header (No Print) -->
+        <section id="section-rekapan" class="tab-section space-y-6">
+            <div class="soft-card p-5 rounded-2xl">
                 <div class="no-print space-y-4 mb-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -332,9 +363,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
                         <div>
                             <label class="block text-xs font-medium text-slate-700 mb-1">Kelas</label>
-                            <select id="rekapanClass" onchange="generateAttendanceReport()" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white">
-                                <!-- Options dynamically loaded -->
-                            </select>
+                            <select id="rekapanClass" onchange="generateAttendanceReport()" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white"></select>
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-700 mb-1">Bulan</label>
@@ -364,27 +393,20 @@
                     </div>
                 </div>
 
-                <!-- Printable Report Header -->
                 <div class="text-center mb-6 pb-4 border-b border-slate-300">
                     <h3 class="text-xl font-bold uppercase tracking-wide text-slate-900">Laporan Kehadiran Siswa</h3>
                     <p id="reportSubHeader" class="text-sm font-medium text-slate-600 mt-1">Kelas: - | Periode: -</p>
                 </div>
 
-                <!-- Matrix Table Container -->
                 <div class="overflow-x-auto">
                     <table id="rekapanTable" class="w-full text-xs text-left border-collapse border border-slate-300">
-                        <thead id="rekapanThead" class="bg-slate-100 text-slate-800">
-                            <!-- Matrix Header Rendered dynamically -->
-                        </thead>
-                        <tbody id="rekapanTbody" class="divide-y divide-slate-200">
-                            <!-- Matrix Rows Rendered dynamically -->
-                        </tbody>
+                        <thead id="rekapanThead" class="bg-slate-100 text-slate-800"></thead>
+                        <tbody id="rekapanTbody"></tbody>
                     </table>
                 </div>
 
-                <!-- Legend / Summary Footer -->
                 <div class="mt-6 flex flex-wrap justify-between items-center text-xs text-slate-600 gap-4 pt-4 border-t border-slate-200">
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
                         <span class="font-bold">Keterangan:</span>
                         <span class="inline-flex items-center gap-1"><span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span> H = Hadir</span>
                         <span class="inline-flex items-center gap-1"><span class="w-3 h-3 bg-sky-500 rounded-full inline-block"></span> I = Izin</span>
@@ -398,19 +420,19 @@
             </div>
         </section>
 
-
-        <!-- ================= SECTION 4: MASTER DATA SISWA ================= -->
-        <section id="section-master-siswa" class="tab-section hidden space-y-6">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <!-- Top Header & Actions -->
+        <section id="section-master-siswa" class="tab-section space-y-6">
+            <div class="soft-card p-5 rounded-2xl space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200">
                     <div>
                         <h2 class="text-lg font-bold text-slate-900">Kelola Data Siswa & Kelas</h2>
-                        <p class="text-xs text-slate-500">Tambah, edit, hapus data siswa, atau atur ulang data sampel.</p>
+                        <p class="text-xs text-slate-500">Tambah, edit, hapus data siswa, atau atur kelas sesuai kebutuhan sekolah.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="resetToDefaultSampleData()" class="px-3 py-2 bg-amber-50 text-amber-700 hover:bg-amber-100 text-xs font-semibold rounded-lg border border-amber-200 transition flex items-center gap-1.5">
                             <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Data Sampel
+                        </button>
+                        <button onclick="openClassManager()" class="px-3 py-2 bg-violet-50 text-violet-700 hover:bg-violet-100 text-xs font-semibold rounded-lg border border-violet-200 transition flex items-center gap-1.5">
+                            <i data-lucide="folders" class="w-4 h-4"></i> Kelola Kelas
                         </button>
                         <button onclick="openModalAddSiswa()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-1.5">
                             <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Siswa Baru
@@ -418,22 +440,18 @@
                     </div>
                 </div>
 
-                <!-- Search & Filters -->
                 <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
                     <div class="relative w-full sm:w-72">
-                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
-                        <input type="text" id="searchSiswaInput" onkeyup="renderSiswaTable()" placeholder="Cari Nama / NISN..." class="w-full pl-9 pr-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+                        <input type="text" id="searchSiswaInput" onkeyup="renderSiswaTable()" placeholder="Cari Nama / NISN..." class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white">
                     </div>
 
                     <div class="flex items-center gap-2 w-full sm:w-auto">
                         <label class="text-xs text-slate-600 font-medium">Filter Kelas:</label>
-                        <select id="filterMasterClass" onchange="renderSiswaTable()" class="px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white">
-                            <!-- Class Filter options -->
-                        </select>
+                        <select id="filterMasterClass" onchange="renderSiswaTable()" class="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white"></select>
                     </div>
                 </div>
 
-                <!-- Table Master Siswa -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm border-collapse">
                         <thead>
@@ -441,23 +459,19 @@
                                 <th class="p-3 font-semibold w-12 text-center">No</th>
                                 <th class="p-3 font-semibold w-32">NIS / NISN</th>
                                 <th class="p-3 font-semibold">Nama Lengkap</th>
-                                <th class="p-3 font-semibold w-28"> Kelas</th>
+                                <th class="p-3 font-semibold w-32">Kelas</th>
                                 <th class="p-3 font-semibold w-28 text-center">Jenis Kelamin</th>
                                 <th class="p-3 font-semibold w-24 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="masterSiswaTbody" class="divide-y divide-slate-200">
-                            <!-- Rows generated dynamically -->
-                        </tbody>
+                        <tbody id="masterSiswaTbody" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- Modal Form Siswa (Add / Edit) -->
-    <div id="modalSiswa" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div id="modalSiswa" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
             <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                 <h3 id="modalSiswaTitle" class="text-base font-bold text-slate-900">Tambah Siswa Baru</h3>
@@ -481,18 +495,12 @@
 
                 <div>
                     <label class="block text-xs font-medium text-slate-700 mb-1">Kelas <span class="text-rose-500">*</span></label>
-                    <select id="formKelas" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                        <option value="X IPA 1">X IPA 1</option>
-                        <option value="X IPA 2">X IPA 2</option>
-                        <option value="XI IPS 1">XI IPS 1</option>
-                        <option value="XI IPS 2">XI IPS 2</option>
-                        <option value="XII MIPA 1">XII MIPA 1</option>
-                    </select>
+                    <select id="formKelas" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white"></select>
                 </div>
 
                 <div>
                     <label class="block text-xs font-medium text-slate-700 mb-1">Jenis Kelamin <span class="text-rose-500">*</span></label>
-                    <div class="flex gap-4 mt-1">
+                    <div class="flex gap-4 mt-1 flex-wrap">
                         <label class="flex items-center text-sm text-slate-700 cursor-pointer">
                             <input type="radio" name="formGender" value="L" checked class="mr-2 text-brand-600"> Laki-laki (L)
                         </label>
@@ -502,631 +510,732 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-2 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="closeModalSiswa()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg shadow transition">Simpan</button>
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 mt-6">
+                    <button type="button" onclick="closeModalSiswa()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm transition">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <div id="modalKelas" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h3 class="text-base font-bold text-slate-900">Kelola Opsi Kelas</h3>
+                <button onclick="closeClassManager()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 mt-auto no-print">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-            &copy; 2026 Aplikasi Absensi Siswa & Rekapan | Dikembangkan untuk Efisiensi Pengelolaan Sekolah.
+            <div class="mt-4 space-y-4">
+                <div class="flex gap-2">
+                    <input id="newClassInput" type="text" placeholder="Contoh: X IPA 3 / XI IPS 3" class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    <button onclick="addCustomClass()" class="px-4 py-2 bg-brand-600 text-white text-sm font-semibold rounded-lg hover:bg-brand-700 transition">Tambah</button>
+                </div>
+
+                <div class="border border-slate-200 rounded-xl overflow-hidden">
+                    <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wide">Daftar Kelas</div>
+                    <div id="classListContainer" class="max-h-72 overflow-y-auto p-3 space-y-2"></div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
 
-
-    <!-- JavaScript Application Logic -->
     <script>
-        // Default Sample Data
-        const SAMPLE_CLASSES = ["X IPA 1", "X IPA 2", "XI IPS 1", "XI IPS 2", "XII MIPA 1"];
+        const STORAGE_KEYS = {
+            classes: 'rayaabsensi.classes',
+            students: 'rayaabsensi.students',
+            attendance: 'rayaabsensi.attendance'
+        };
 
-        const SAMPLE_STUDENTS = [
-            { id: "101", nis: "2024001", nama: "Ahmad Rizky Pratama", kelas: "X IPA 1", gender: "L" },
-            { id: "102", nis: "2024002", nama: "Anisa Rahmawati", kelas: "X IPA 1", gender: "P" },
-            { id: "103", nis: "2024003", nama: "Budi Santoso", kelas: "X IPA 1", gender: "L" },
-            { id: "104", nis: "2024004", nama: "Citra Dewi Maharani", kelas: "X IPA 1", gender: "P" },
-            { id: "105", nis: "2024005", nama: "Dedi Kurniawan", kelas: "X IPA 1", gender: "L" },
-            { id: "106", nis: "2024006", nama: "Eka Putri Utami", kelas: "X IPA 2", gender: "P" },
-            { id: "107", nis: "2024007", nama: "Fajar Nugraha", kelas: "X IPA 2", gender: "L" },
-            { id: "108", nis: "2024008", nama: "Gita Gutawa", kelas: "X IPA 2", gender: "P" },
-            { id: "109", nis: "2024009", nama: "Hendra Wijaya", kelas: "XI IPS 1", gender: "L" },
-            { id: "110", nis: "2024010", nama: "Indah Permata", kelas: "XI IPS 1", gender: "P" }
+        const DEFAULT_CLASS_OPTIONS = ['X IPA 1', 'X IPA 2', 'XI IPS 1', 'XI IPS 2', 'XII MIPA 1'];
+        const DEFAULT_STUDENTS = [
+            { id: 1, nis: '101', nama: 'Ayu Lestari', kelas: 'X IPA 1', gender: 'P' },
+            { id: 2, nis: '102', nama: 'Budi Santoso', kelas: 'X IPA 1', gender: 'L' },
+            { id: 3, nis: '201', nama: 'Citra Dewi', kelas: 'X IPA 2', gender: 'P' },
+            { id: 4, nis: '202', nama: 'Dimas Pratama', kelas: 'X IPA 2', gender: 'L' },
+            { id: 5, nis: '301', nama: 'Eka Putri', kelas: 'XI IPS 1', gender: 'P' },
+            { id: 6, nis: '302', nama: 'Fajar Rahman', kelas: 'XI IPS 1', gender: 'L' },
+            { id: 7, nis: '401', nama: 'Gita Nirmala', kelas: 'XI IPS 2', gender: 'P' },
+            { id: 8, nis: '402', nama: 'Hendra Wijaya', kelas: 'XI IPS 2', gender: 'L' },
+            { id: 9, nis: '501', nama: 'Intan Permata', kelas: 'XII MIPA 1', gender: 'P' },
+            { id: 10, nis: '502', nama: 'Joko Susilo', kelas: 'XII MIPA 1', gender: 'L' }
         ];
 
-        // State Variables
-        let studentsList = [];
-        let attendanceRecords = {}; // Format: { "YYYY-MM-DD_CLASS": [ { studentId, status, note } ] }
-        let chartTrendInstance = null;
-        let chartPieInstance = null;
+        let state = {
+            classes: [],
+            students: [],
+            attendance: {}
+        };
 
-        // Initialize App on DOM Load
-        window.addEventListener('DOMContentLoaded', () => {
-            initializeStorage();
-            setCurrentDateDisplay();
-            setupDefaultDates();
-            populateClassDropdowns();
-            switchTab('dashboard');
-            lucide.createIcons();
-        });
-
-        // Local Storage Initialization
-        function initializeStorage() {
-            const savedStudents = localStorage.getItem('absensi_students');
-            const savedAttendance = localStorage.getItem('absensi_records');
-
-            if (savedStudents) {
-                studentsList = JSON.parse(savedStudents);
-            } else {
-                studentsList = [...SAMPLE_STUDENTS];
-                localStorage.setItem('absensi_students', JSON.stringify(studentsList));
-            }
-
-            if (savedAttendance) {
-                attendanceRecords = JSON.parse(savedAttendance);
-            } else {
-                attendanceRecords = {};
-                localStorage.setItem('absensi_records', JSON.stringify(attendanceRecords));
-            }
-        }
-
-        function saveStudentsToStorage() {
-            localStorage.setItem('absensi_students', JSON.stringify(studentsList));
-        }
-
-        function saveAttendanceToStorage() {
-            localStorage.setItem('absensi_records', JSON.stringify(attendanceRecords));
-        }
-
-        function resetToDefaultSampleData() {
-            if (confirm("Apakah Anda yakin ingin mengembalikan data ke sampel awal? Semua data baru akan terhapus.")) {
-                studentsList = [...SAMPLE_STUDENTS];
-                attendanceRecords = {};
-                saveStudentsToStorage();
-                saveAttendanceToStorage();
-                showToast("Data telah direset ke versi sampel default.", "info");
-                renderSiswaTable();
-                updateDashboardStats();
-            }
-        }
-
-        // Navigation Tabs Controller
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-section').forEach(el => el.classList.add('hidden'));
-            
-            // Highlight Desktop Nav
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white');
-                btn.classList.add('text-slate-600');
+        function normalizeClassList(list) {
+            const unique = [];
+            (list || []).forEach(item => {
+                const value = String(item || '').trim();
+                if (value && !unique.includes(value)) unique.push(value);
             });
-            const activeNav = document.getElementById(`nav-${tabName}`);
-            if (activeNav) {
-                activeNav.classList.add('bg-brand-600', 'text-white');
-                activeNav.classList.remove('text-slate-600');
-            }
-
-            // Highlight Mobile Nav
-            document.querySelectorAll('.nav-mob-btn').forEach(btn => {
-                btn.classList.remove('text-brand-600', 'font-bold');
-                btn.classList.add('text-slate-600');
-            });
-            const activeMobNav = document.getElementById(`nav-mob-${tabName}`);
-            if (activeMobNav) {
-                activeMobNav.classList.add('text-brand-600', 'font-bold');
-            }
-
-            // Show selected section
-            const targetSection = document.getElementById(`section-${tabName}`);
-            if (targetSection) {
-                targetSection.classList.remove('hidden');
-            }
-
-            // Refresh specific section contents
-            if (tabName === 'dashboard') {
-                updateDashboardStats();
-            } else if (tabName === 'input-absensi') {
-                loadAttendanceInputTable();
-            } else if (tabName === 'rekapan') {
-                generateAttendanceReport();
-            } else if (tabName === 'master-siswa') {
-                renderSiswaTable();
-            }
-            
-            lucide.createIcons();
+            return unique;
         }
 
-        // Helper Functions
-        function setCurrentDateDisplay() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDateText').textContent = new Date().toLocaleDateString('id-ID', options);
+        function loadStoredData() {
+            const storedClasses = JSON.parse(localStorage.getItem(STORAGE_KEYS.classes) || 'null');
+            const storedStudents = JSON.parse(localStorage.getItem(STORAGE_KEYS.students) || 'null');
+            const storedAttendance = JSON.parse(localStorage.getItem(STORAGE_KEYS.attendance) || 'null');
+
+            state.classes = normalizeClassList(storedClasses && storedClasses.length ? storedClasses : DEFAULT_CLASS_OPTIONS);
+            state.students = Array.isArray(storedStudents) && storedStudents.length ? storedStudents : DEFAULT_STUDENTS;
+            state.attendance = storedAttendance || {};
+
+            if (!storedClasses) {
+                localStorage.setItem(STORAGE_KEYS.classes, JSON.stringify(state.classes));
+            }
+            if (!storedStudents) {
+                localStorage.setItem(STORAGE_KEYS.students, JSON.stringify(state.students));
+            }
+            if (!storedAttendance) {
+                localStorage.setItem(STORAGE_KEYS.attendance, JSON.stringify(state.attendance));
+            }
         }
 
-        function setupDefaultDates() {
-            const todayStr = getLocalDateString();
-            document.getElementById('inputAbsensiDate').value = todayStr;
+        function saveClasses() {
+            localStorage.setItem(STORAGE_KEYS.classes, JSON.stringify(state.classes));
+            renderAllClassSelectors();
+        }
 
+        function saveStudents() {
+            localStorage.setItem(STORAGE_KEYS.students, JSON.stringify(state.students));
+            renderSiswaTable();
+            renderDashboardStats();
+        }
+
+        function saveAttendance() {
+            localStorage.setItem(STORAGE_KEYS.attendance, JSON.stringify(state.attendance));
+        }
+
+        function updateDateText() {
             const now = new Date();
-            document.getElementById('rekapanMonth').value = now.getMonth();
-            document.getElementById('rekapanYear').value = now.getFullYear();
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('currentDateText').textContent = now.toLocaleDateString('id-ID', options);
         }
 
-        function populateClassDropdowns() {
-            const inputSelect = document.getElementById('inputAbsensiClass');
-            const rekapanSelect = document.getElementById('rekapanClass');
-            const masterSelect = document.getElementById('filterMasterClass');
-            const classNames = [...new Set([...SAMPLE_CLASSES, ...studentsList.map(student => student.kelas)])].sort();
-            const inputClass = inputSelect.value;
-            const reportClass = rekapanSelect.value;
-            const masterClass = masterSelect.value;
-            const optionsHtml = classNames.map(kelas => `<option value="${kelas}">${kelas}</option>`).join('');
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.toggle('active', section.id === `section-${tabName}`);
+            });
 
-            inputSelect.innerHTML = optionsHtml;
-            rekapanSelect.innerHTML = optionsHtml;
-            masterSelect.innerHTML = `<option value="ALL">Semua Kelas</option>${optionsHtml}`;
-            if (classNames.includes(inputClass)) inputSelect.value = inputClass;
-            if (classNames.includes(reportClass)) rekapanSelect.value = reportClass;
-            if (masterClass === 'ALL' || classNames.includes(masterClass)) masterSelect.value = masterClass;
-        }
-
-        function getLocalDateString(date = new Date()) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            document.querySelectorAll('.nav-btn, .nav-mob-btn').forEach(button => {
+                const isActive = button.id === `nav-${tabName}` || button.id === `nav-mob-${tabName}`;
+                button.classList.toggle('active', isActive);
+                button.classList.toggle('text-slate-900', isActive);
+                button.classList.toggle('text-slate-600', !isActive);
+            });
         }
 
         function showToast(message, type = 'success') {
             const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            
-            const bgClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-brand-600');
-            
-            toast.className = `${bgClass} text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transform transition-all duration-300 pointer-events-auto opacity-0 translate-y-2`;
-            toast.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-4 h-4"></i> ${message}`;
-            
+            const colorMap = {
+                success: 'bg-emerald-500',
+                info: 'bg-sky-500',
+                warning: 'bg-amber-500',
+                danger: 'bg-rose-500'
+            };
+
+            toast.className = `rounded-xl px-4 py-2 text-sm font-medium text-white shadow-lg ${colorMap[type] || 'bg-slate-700'} animate-pulse`;
+            toast.textContent = message;
             toastContainer.appendChild(toast);
-            lucide.createIcons();
 
             setTimeout(() => {
-                toast.classList.remove('opacity-0', 'translate-y-2');
-            }, 50);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+                toast.remove();
+            }, 2200);
         }
 
+        function renderAllClassSelectors() {
+            const selects = [
+                document.getElementById('inputAbsensiClass'),
+                document.getElementById('rekapanClass'),
+                document.getElementById('formKelas'),
+                document.getElementById('filterMasterClass')
+            ];
 
-        // ================= DASHBOARD CONTROLLER =================
-        function updateDashboardStats() {
-            const todayStr = getLocalDateString();
-            let totalStudents = studentsList.length;
-            let hadirCount = 0;
-            let izinCount = 0;
-            let sakitCount = 0;
-            let alpaCount = 0;
+            selects.forEach(select => {
+                if (!select) return;
 
-            studentsList.forEach(student => {
-                const key = `${todayStr}_${student.kelas}`;
-                const record = (attendanceRecords[key] || []).find(item => item.studentId === student.id);
-                if (record?.status === 'Hadir') hadirCount++;
-                else if (record?.status === 'Izin') izinCount++;
-                else if (record?.status === 'Sakit') sakitCount++;
-                else if (record?.status === 'Alpa') alpaCount++;
-            });
+                const currentValue = select.value;
+                select.innerHTML = '';
 
-            const totalAbsensiRecorded = hadirCount + izinCount + sakitCount + alpaCount;
-            const percentage = totalAbsensiRecorded > 0 ? Math.round((hadirCount / totalAbsensiRecorded) * 100) : 0;
-
-            document.getElementById('statTotalSiswa').textContent = totalStudents;
-            document.getElementById('statHadir').textContent = hadirCount;
-            document.getElementById('statIzin').textContent = izinCount;
-            document.getElementById('statSakit').textContent = sakitCount;
-            document.getElementById('statAlpa').textContent = alpaCount;
-            document.getElementById('statPersentase').textContent = `${percentage}%`;
-
-            renderDashboardCharts(hadirCount, izinCount, sakitCount, alpaCount);
-        }
-
-        function renderDashboardCharts(hadir, izin, sakit, alpa) {
-            // Pie Chart (Distribution)
-            const ctxPie = document.getElementById('chartPie').getContext('2d');
-            if (chartPieInstance) chartPieInstance.destroy();
-
-            chartPieInstance = new Chart(ctxPie, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Hadir', 'Izin', 'Sakit', 'Alpa'],
-                    datasets: [{
-                        data: [hadir, izin, sakit, alpa],
-                        backgroundColor: ['#10b981', '#06b6d4', '#f59e0b', '#f43f5e'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
+                if (select.id === 'filterMasterClass') {
+                    const allOption = document.createElement('option');
+                    allOption.value = 'Semua Kelas';
+                    allOption.textContent = 'Semua Kelas';
+                    select.appendChild(allOption);
                 }
-            });
 
-            // Trend Chart (Last 7 Days)
-            const daysLabels = [];
-            const trendData = [];
-            const today = new Date();
-
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
-                const dStr = getLocalDateString(d);
-                const dayName = d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' });
-                daysLabels.push(dayName);
-
-                let dayHadir = 0;
-                studentsList.forEach(student => {
-                    const key = `${dStr}_${student.kelas}`;
-                    const record = (attendanceRecords[key] || []).find(item => item.studentId === student.id);
-                    if (record?.status === 'Hadir') dayHadir++;
+                state.classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls;
+                    option.textContent = cls;
+                    select.appendChild(option);
                 });
-                trendData.push(dayHadir);
-            }
 
-            const ctxTrend = document.getElementById('chartTrend').getContext('2d');
-            if (chartTrendInstance) chartTrendInstance.destroy();
-
-            chartTrendInstance = new Chart(ctxTrend, {
-                type: 'line',
-                data: {
-                    labels: daysLabels,
-                    datasets: [{
-                        label: 'Siswa Hadir',
-                        data: trendData,
-                        borderColor: '#0284c7',
-                        backgroundColor: 'rgba(2, 132, 199, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#0284c7',
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, ticks: { precision: 0 } }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
+                if (state.classes.length) {
+                    const fallbackValue = select.id === 'filterMasterClass' ? 'Semua Kelas' : state.classes[0];
+                    select.value = state.classes.includes(currentValue) ? currentValue : fallbackValue;
                 }
             });
+
+            if (document.getElementById('inputAbsensiClass')) {
+                document.getElementById('inputAbsensiClass').value = document.getElementById('inputAbsensiClass').value || state.classes[0] || '';
+            }
+            if (document.getElementById('rekapanClass')) {
+                document.getElementById('rekapanClass').value = document.getElementById('rekapanClass').value || 'Semua Kelas';
+            }
+            if (document.getElementById('filterMasterClass')) {
+                document.getElementById('filterMasterClass').value = document.getElementById('filterMasterClass').value || 'Semua Kelas';
+            }
         }
 
+        function renderClassManagerList() {
+            const container = document.getElementById('classListContainer');
+            container.innerHTML = '';
 
-        // ================= INPUT ABSENSI CONTROLLER =================
-        function loadAttendanceInputTable() {
-            const dateVal = document.getElementById('inputAbsensiDate').value;
-            const classVal = document.getElementById('inputAbsensiClass').value;
-            const tbody = document.getElementById('attendanceInputTbody');
-
-            if (!dateVal || !classVal) return;
-
-            const filteredStudents = studentsList.filter(s => s.kelas === classVal);
-            const recordKey = `${dateVal}_${classVal}`;
-            const existingRecords = attendanceRecords[recordKey] || [];
-
-            if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">Tidak ada siswa terdaftar di kelas ${classVal}.</td></tr>`;
+            if (!state.classes.length) {
+                container.innerHTML = '<div class="text-sm text-slate-500">Belum ada kelas yang dibuat.</div>';
                 return;
             }
 
-            tbody.innerHTML = filteredStudents.map((s, idx) => {
-                const studentRec = existingRecords.find(r => r.studentId === s.id) || { status: 'Hadir', note: '' };
-                const currentStatus = studentRec.status;
-
-                return `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100" data-student-id="${s.id}">
-                        <td class="p-3 text-center text-xs font-semibold text-slate-500">${idx + 1}</td>
-                        <td class="p-3 font-mono text-xs text-slate-600">${s.nis}</td>
-                        <td class="p-3 font-medium text-slate-900">${s.nama}</td>
-                        <td class="p-3">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="status_${s.id}" value="Hadir" ${currentStatus === 'Hadir' ? 'checked' : ''} class="peer hidden">
-                                    <span class="px-2.5 py-1 text-xs rounded-md border border-slate-200 peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition inline-block">Hadir</span>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="status_${s.id}" value="Izin" ${currentStatus === 'Izin' ? 'checked' : ''} class="peer hidden">
-                                    <span class="px-2.5 py-1 text-xs rounded-md border border-slate-200 peer-checked:bg-sky-600 peer-checked:text-white peer-checked:border-sky-600 transition inline-block">Izin</span>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="status_${s.id}" value="Sakit" ${currentStatus === 'Sakit' ? 'checked' : ''} class="peer hidden">
-                                    <span class="px-2.5 py-1 text-xs rounded-md border border-slate-200 peer-checked:bg-amber-600 peer-checked:text-white peer-checked:border-amber-600 transition inline-block">Sakit</span>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="status_${s.id}" value="Alpa" ${currentStatus === 'Alpa' ? 'checked' : ''} class="peer hidden">
-                                    <span class="px-2.5 py-1 text-xs rounded-md border border-slate-200 peer-checked:bg-rose-600 peer-checked:text-white peer-checked:border-rose-600 transition inline-block">Alpa</span>
-                                </label>
-                            </div>
-                        </td>
-                        <td class="p-3">
-                            <input type="text" value="${studentRec.note || ''}" placeholder="Keterangan (Opsional)" class="input-note w-full px-2.5 py-1 border border-slate-200 rounded text-xs focus:ring-1 focus:ring-brand-500 focus:outline-none">
-                        </td>
-                    </tr>
+            state.classes.forEach((cls, index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-200 bg-white';
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-100 text-brand-700 text-[11px] font-bold">${index + 1}</span>
+                        <span class="font-medium text-slate-700">${cls}</span>
+                    </div>
+                    <button onclick="removeClass('${cls.replace(/'/g, "\\'")}' )" class="text-rose-600 hover:text-rose-700 text-xs font-semibold px-2 py-1 rounded-md hover:bg-rose-50 transition">Hapus</button>
                 `;
-            }).join('');
+                container.appendChild(row);
+            });
+        }
+
+        function openClassManager() {
+            renderClassManagerList();
+            document.getElementById('modalKelas').classList.remove('hidden');
+            document.getElementById('modalKelas').classList.add('flex');
+            document.getElementById('newClassInput').focus();
+        }
+
+        function closeClassManager() {
+            document.getElementById('modalKelas').classList.add('hidden');
+            document.getElementById('modalKelas').classList.remove('flex');
+            document.getElementById('newClassInput').value = '';
+        }
+
+        function addCustomClass() {
+            const input = document.getElementById('newClassInput');
+            const newClass = String(input.value || '').trim();
+
+            if (!newClass) {
+                showToast('Nama kelas tidak boleh kosong.', 'warning');
+                return;
+            }
+
+            if (state.classes.includes(newClass)) {
+                showToast('Kelas tersebut sudah ada.', 'warning');
+                return;
+            }
+
+            state.classes.push(newClass);
+            state.classes = normalizeClassList(state.classes);
+            saveClasses();
+            renderClassManagerList();
+            input.value = '';
+            showToast('Kelas baru berhasil ditambah.', 'success');
+        }
+
+        function removeClass(className) {
+            if (state.classes.length <= 1) {
+                showToast('Minimal harus ada 1 kelas aktif.', 'warning');
+                return;
+            }
+
+            const confirmed = confirm(`Hapus kelas "${className}"? Siswa yang menggunakan kelas ini akan diubah ke kelas pertama yang tersedia.`);
+            if (!confirmed) return;
+
+            const fallbackClass = state.classes.find(item => item !== className) || className;
+            state.classes = state.classes.filter(item => item !== className);
+            state.students = state.students.map(student => {
+                if (student.kelas === className) {
+                    return { ...student, kelas: fallbackClass };
+                }
+                return student;
+            });
+
+            localStorage.setItem(STORAGE_KEYS.students, JSON.stringify(state.students));
+            saveClasses();
+            renderClassManagerList();
+            renderSiswaTable();
+            renderDashboardStats();
+            showToast(`Kelas "${className}" berhasil dihapus.`, 'info');
+        }
+
+        function openModalAddSiswa() {
+            document.getElementById('modalSiswaTitle').textContent = 'Tambah Siswa Baru';
+            document.getElementById('editSiswaId').value = '';
+            document.getElementById('formSiswa').reset();
+            const genderRadio = document.querySelector('input[name="formGender"][value="L"]');
+            if (genderRadio) genderRadio.checked = true;
+            renderAllClassSelectors();
+            if (state.classes.length) {
+                document.getElementById('formKelas').value = state.classes[0];
+            }
+            document.getElementById('modalSiswa').classList.remove('hidden');
+            document.getElementById('modalSiswa').classList.add('flex');
+        }
+
+        function closeModalSiswa() {
+            document.getElementById('modalSiswa').classList.add('hidden');
+            document.getElementById('modalSiswa').classList.remove('flex');
+            document.getElementById('formSiswa').reset();
+        }
+
+        function renderSiswaTable() {
+            const searchValue = document.getElementById('searchSiswaInput')?.value?.toLowerCase() || '';
+            const selectedFilter = document.getElementById('filterMasterClass')?.value || 'Semua Kelas';
+            const tbody = document.getElementById('masterSiswaTbody');
+
+            if (!tbody) return;
+
+            let filteredStudents = [...state.students];
+            if (selectedFilter !== 'Semua Kelas') {
+                filteredStudents = filteredStudents.filter(student => student.kelas === selectedFilter);
+            }
+            if (searchValue) {
+                filteredStudents = filteredStudents.filter(student => {
+                    const nama = student.nama.toLowerCase();
+                    const nis = String(student.nis).toLowerCase();
+                    return nama.includes(searchValue) || nis.includes(searchValue);
+                });
+            }
+
+            tbody.innerHTML = '';
+
+            if (!filteredStudents.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-sm text-slate-500">Tidak ada data siswa sesuai filter.</td></tr>';
+                return;
+            }
+
+            filteredStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.className = 'table-row border-b border-slate-100';
+                row.innerHTML = `
+                    <td class="p-3 text-center text-slate-500">${index + 1}</td>
+                    <td class="p-3 font-medium text-slate-700">${student.nis}</td>
+                    <td class="p-3 text-slate-800">${student.nama}</td>
+                    <td class="p-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium">${student.kelas}</span></td>
+                    <td class="p-3 text-center text-slate-700">${student.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
+                    <td class="p-3 text-center">
+                        <div class="flex justify-center gap-2">
+                            <button onclick="editSiswa(${student.id})" class="p-1.5 bg-sky-100 text-sky-700 rounded-md hover:bg-sky-200 transition" title="Edit"><i data-lucide="pencil-line" class="w-4 h-4"></i></button>
+                            <button onclick="deleteSiswa(${student.id})" class="p-1.5 bg-rose-100 text-rose-700 rounded-md hover:bg-rose-200 transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function editSiswa(id) {
+            const student = state.students.find(item => item.id === id);
+            if (!student) return;
+
+            document.getElementById('modalSiswaTitle').textContent = 'Edit Data Siswa';
+            document.getElementById('editSiswaId').value = student.id;
+            document.getElementById('formNis').value = student.nis;
+            document.getElementById('formNama').value = student.nama;
+            document.getElementById('formKelas').value = student.kelas;
+            document.querySelector(`input[name="formGender"][value="${student.gender}"]`).checked = true;
+
+            document.getElementById('modalSiswa').classList.remove('hidden');
+            document.getElementById('modalSiswa').classList.add('flex');
+        }
+
+        function deleteSiswa(id) {
+            const student = state.students.find(item => item.id === id);
+            if (!student) return;
+
+            const confirmed = confirm(`Hapus siswa "${student.nama}" dari data?`);
+            if (!confirmed) return;
+
+            state.students = state.students.filter(item => item.id !== id);
+            saveStudents();
+            showToast('Siswa berhasil dihapus.', 'info');
+        }
+
+        function handleSiswaFormSubmit(event) {
+            event.preventDefault();
+
+            const idInput = document.getElementById('editSiswaId');
+            const nis = document.getElementById('formNis').value.trim();
+            const nama = document.getElementById('formNama').value.trim();
+            const kelas = document.getElementById('formKelas').value;
+            const gender = document.querySelector('input[name="formGender"]:checked')?.value || 'L';
+
+            if (!nis || !nama || !kelas) {
+                showToast('Semua field wajib diisi.', 'warning');
+                return;
+            }
+
+            if (idInput.value) {
+                state.students = state.students.map(student => student.id === Number(idInput.value)
+                    ? { ...student, nis, nama, kelas, gender }
+                    : student
+                );
+                showToast('Data siswa berhasil diperbarui.', 'success');
+            } else {
+                const newId = Date.now();
+                const newStudent = { id: newId, nis, nama, kelas, gender };
+                state.students.push(newStudent);
+                showToast('Siswa baru berhasil ditambahkan.', 'success');
+            }
+
+            saveStudents();
+            closeModalSiswa();
         }
 
         function setAllAttendance(status) {
             const rows = document.querySelectorAll('#attendanceInputTbody tr');
             rows.forEach(row => {
-                const radio = row.querySelector(`input[value="${status}"]`);
-                if (radio) radio.checked = true;
+                const select = row.querySelector('select[name="attendanceStatus"]');
+                if (select) {
+                    select.value = status;
+                }
+            });
+        }
+
+        function loadAttendanceInputTable() {
+            const selectedClass = document.getElementById('inputAbsensiClass')?.value;
+            const selectedDate = document.getElementById('inputAbsensiDate')?.value || new Date().toISOString().slice(0, 10);
+            const tbody = document.getElementById('attendanceInputTbody');
+            if (!tbody) return;
+
+            document.getElementById('inputAbsensiDate').value = selectedDate;
+
+            if (!selectedClass) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-sm text-slate-500">Pilih kelas terlebih dahulu.</td></tr>';
+                return;
+            }
+
+            const classStudents = state.students.filter(student => student.kelas === selectedClass);
+            if (!classStudents.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-sm text-slate-500">Belum ada siswa di kelas ini.</td></tr>';
+                return;
+            }
+
+            const key = `${selectedDate}|${selectedClass}`;
+            const savedRecords = state.attendance[key] || [];
+            const existingMap = new Map(savedRecords.map(item => [item.nis, item]));
+
+            tbody.innerHTML = '';
+
+            classStudents.forEach((student, index) => {
+                const existing = existingMap.get(student.nis) || { status: 'Hadir', catatan: '' };
+                const row = document.createElement('tr');
+                row.className = 'table-row border-b border-slate-100';
+                row.innerHTML = `
+                    <td class="p-3 text-center text-slate-500">${index + 1}</td>
+                    <td class="p-3 font-medium text-slate-700">${student.nis}</td>
+                    <td class="p-3 text-slate-800">${student.nama}</td>
+                    <td class="p-3 text-center">
+                        <select name="attendanceStatus" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 text-xs font-medium focus:ring-2 focus:ring-brand-500">
+                            <option value="Hadir" ${existing.status === 'Hadir' ? 'selected' : ''}>Hadir</option>
+                            <option value="Izin" ${existing.status === 'Izin' ? 'selected' : ''}>Izin</option>
+                            <option value="Sakit" ${existing.status === 'Sakit' ? 'selected' : ''}>Sakit</option>
+                            <option value="Alpa" ${existing.status === 'Alpa' ? 'selected' : ''}>Alpa</option>
+                        </select>
+                    </td>
+                    <td class="p-3">
+                        <input type="text" value="${(existing.catatan || '').replace(/"/g, '&quot;')}" data-nis="${student.nis}" class="attendance-note w-full border border-slate-300 rounded-lg px-2 py-1.5 text-xs focus:ring-2 focus:ring-brand-500" placeholder="Catatan / keterangan">
+                    </td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
         function saveAttendanceRecord() {
-            const dateVal = document.getElementById('inputAbsensiDate').value;
-            const classVal = document.getElementById('inputAbsensiClass').value;
+            const className = document.getElementById('inputAbsensiClass')?.value;
+            const date = document.getElementById('inputAbsensiDate')?.value || new Date().toISOString().slice(0, 10);
+            const rows = document.querySelectorAll('#attendanceInputTbody tr');
 
-            if (!dateVal || !classVal) {
-                showToast("Pilih tanggal dan kelas terlebih dahulu.", "error");
+            if (!className || !rows.length) {
+                showToast('Pilih kelas dan tanggal terlebih dahulu.', 'warning');
                 return;
             }
 
-            const rows = document.querySelectorAll('#attendanceInputTbody tr');
             const records = [];
-
             rows.forEach(row => {
-                const studentId = row.getAttribute('data-student-id');
-                if (studentId) {
-                    const selectedRadio = row.querySelector(`input[name="status_${studentId}"]:checked`);
-                    const noteInput = row.querySelector('.input-note');
+                const nis = row.querySelector('td:nth-child(2)')?.textContent?.trim();
+                const nameCell = row.querySelector('td:nth-child(3)')?.textContent?.trim();
+                const status = row.querySelector('select[name="attendanceStatus"]')?.value || 'Hadir';
+                const catatan = row.querySelector('.attendance-note')?.value || '';
 
-                    records.push({
-                        studentId: studentId,
-                        status: selectedRadio ? selectedRadio.value : 'Hadir',
-                        note: noteInput ? noteInput.value.trim() : ''
-                    });
+                if (nis && nameCell) {
+                    records.push({ nis, nama: nameCell, status, catatan, date, kelas: className });
                 }
             });
 
-            const recordKey = `${dateVal}_${classVal}`;
-            attendanceRecords[recordKey] = records;
-            saveAttendanceToStorage();
-            updateDashboardStats();
-            showToast(`Absensi kelas ${classVal} tanggal ${dateVal} berhasil disimpan!`);
+            const key = `${date}|${className}`;
+            state.attendance[key] = records;
+            saveAttendance();
+            showToast('Data absensi berhasil disimpan.', 'success');
+            renderDashboardStats();
         }
 
+        function renderDashboardStats() {
+            const total = state.students.length;
+            const today = new Date().toISOString().slice(0, 10);
+            const byStatus = { Hadir: 0, Izin: 0, Sakit: 0, Alpa: 0 };
 
-        // ================= REKAPAN & LAPORAN CONTROLLER =================
-        function generateAttendanceReport() {
-            const classVal = document.getElementById('rekapanClass').value;
-            const monthVal = parseInt(document.getElementById('rekapanMonth').value);
-            const yearVal = parseInt(document.getElementById('rekapanYear').value);
-
-            const monthsNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            document.getElementById('reportSubHeader').textContent = `Kelas: ${classVal} | Periode: ${monthsNames[monthVal]} ${yearVal}`;
-
-            const daysInMonth = new Date(yearVal, monthVal + 1, 0).getDate();
-            const classStudents = studentsList.filter(s => s.kelas === classVal);
-
-            const thead = document.getElementById('rekapanThead');
-            const tbody = document.getElementById('rekapanTbody');
-
-            // Header Generation
-            let headerHtml = `
-                <tr>
-                    <th class="p-2 border border-slate-300 text-center w-8">No</th>
-                    <th class="p-2 border border-slate-300 w-24">NIS</th>
-                    <th class="p-2 border border-slate-300 w-44">Nama Siswa</th>
-            `;
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                headerHtml += `<th class="p-1 border border-slate-300 text-center w-6">${day}</th>`;
-            }
-
-            headerHtml += `
-                    <th class="p-1 border border-slate-300 text-center bg-emerald-100 text-emerald-800 w-7">H</th>
-                    <th class="p-1 border border-slate-300 text-center bg-sky-100 text-sky-800 w-7">I</th>
-                    <th class="p-1 border border-slate-300 text-center bg-amber-100 text-amber-800 w-7">S</th>
-                    <th class="p-1 border border-slate-300 text-center bg-rose-100 text-rose-800 w-7">A</th>
-                    <th class="p-2 border border-slate-300 text-center w-12">%</th>
-                </tr>
-            `;
-            thead.innerHTML = headerHtml;
-
-            if (classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${daysInMonth + 8}" class="p-6 text-center text-slate-400">Tidak ada siswa di kelas ini.</td></tr>`;
-                return;
-            }
-
-            // Body Rows Generation
-            tbody.innerHTML = classStudents.map((siswa, idx) => {
-                let hCount = 0, iCount = 0, sCount = 0, aCount = 0;
-                let dayCellsHtml = '';
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const formattedDay = String(day).padStart(2, '0');
-                    const formattedMonth = String(monthVal + 1).padStart(2, '0');
-                    const dateKey = `${yearVal}-${formattedMonth}-${formattedDay}_${classVal}`;
-
-                    const dayRecords = attendanceRecords[dateKey] || [];
-                    const studentRecord = dayRecords.find(r => r.studentId === siswa.id);
-
-                    let statusChar = '-';
-                    let bgClass = '';
-
-                    if (studentRecord) {
-                        if (studentRecord.status === 'Hadir') { statusChar = 'H'; bgClass = 'bg-emerald-50 text-emerald-700 font-bold'; hCount++; }
-                        else if (studentRecord.status === 'Izin') { statusChar = 'I'; bgClass = 'bg-sky-100 text-sky-700 font-bold'; iCount++; }
-                        else if (studentRecord.status === 'Sakit') { statusChar = 'S'; bgClass = 'bg-amber-100 text-amber-700 font-bold'; sCount++; }
-                        else if (studentRecord.status === 'Alpa') { statusChar = 'A'; bgClass = 'bg-rose-100 text-rose-700 font-bold'; aCount++; }
+            Object.keys(state.attendance).forEach(key => {
+                const [date] = key.split('|');
+                if (date !== today) return;
+                const records = state.attendance[key] || [];
+                records.forEach(record => {
+                    if (byStatus[record.status] !== undefined) {
+                        byStatus[record.status] += 1;
                     }
+                });
+            });
 
-                    dayCellsHtml += `<td class="p-1 border border-slate-300 text-center font-mono text-[10px] ${bgClass}">${statusChar}</td>`;
+            const hadir = byStatus.Hadir;
+            const izin = byStatus.Izin;
+            const sakit = byStatus.Sakit;
+            const alpa = byStatus.Alpa;
+            const percentage = total ? Math.round(((hadir + izin + sakit + alpa) ? (hadir / total) * 100 : 0)) : 0;
+
+            document.getElementById('statTotalSiswa').textContent = total;
+            document.getElementById('statHadir').textContent = hadir;
+            document.getElementById('statIzin').textContent = izin;
+            document.getElementById('statSakit').textContent = sakit;
+            document.getElementById('statAlpa').textContent = alpa;
+            document.getElementById('statPersentase').textContent = `${percentage}%`;
+
+            renderCharts();
+        }
+
+        function renderCharts() {
+            const today = new Date().toISOString().slice(0, 10);
+            const statusCounts = { Hadir: 0, Izin: 0, Sakit: 0, Alpa: 0 };
+
+            Object.keys(state.attendance).forEach(key => {
+                const [date] = key.split('|');
+                if (date !== today) return;
+                (state.attendance[key] || []).forEach(item => {
+                    if (statusCounts[item.status] !== undefined) {
+                        statusCounts[item.status] += 1;
+                    }
+                });
+            });
+
+            const pieCtx = document.getElementById('chartPie');
+            if (pieCtx) {
+                if (window.chartPieInstance) window.chartPieInstance.destroy();
+                window.chartPieInstance = new Chart(pieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Hadir', 'Izin', 'Sakit', 'Alpa'],
+                        datasets: [{
+                            data: [statusCounts.Hadir, statusCounts.Izin, statusCounts.Sakit, statusCounts.Alpa],
+                            backgroundColor: ['#10b981', '#38bdf8', '#f59e0b', '#f87171'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            const trendCtx = document.getElementById('chartTrend');
+            if (trendCtx) {
+                if (window.chartTrendInstance) window.chartTrendInstance.destroy();
+                const labels = [];
+                const data = [];
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    const iso = date.toISOString().slice(0, 10);
+                    labels.push(date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
+                    let total = 0;
+                    Object.keys(state.attendance).forEach(key => {
+                        const [recordDate] = key.split('|');
+                        if (recordDate === iso) {
+                            (state.attendance[key] || []).forEach(item => {
+                                if (item.status === 'Hadir') total += 1;
+                            });
+                        }
+                    });
+                    data.push(total);
                 }
 
-                const totalFilled = hCount + iCount + sCount + aCount;
-                const perc = totalFilled > 0 ? Math.round((hCount / totalFilled) * 100) : 0;
+                window.chartTrendInstance = new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Hadir',
+                            data,
+                            borderColor: '#0369a1',
+                            backgroundColor: 'rgba(3, 105, 161, 0.12)',
+                            borderWidth: 3,
+                            tension: 0.35,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#0369a1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            }
+        }
 
-                return `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-2 border border-slate-300 text-center">${idx + 1}</td>
-                        <td class="p-2 border border-slate-300 font-mono text-[11px]">${siswa.nis}</td>
-                        <td class="p-2 border border-slate-300 font-medium">${siswa.nama}</td>
-                        ${dayCellsHtml}
-                        <td class="p-1 border border-slate-300 text-center font-bold text-emerald-700 bg-emerald-50/50">${hCount}</td>
-                        <td class="p-1 border border-slate-300 text-center font-bold text-sky-700 bg-sky-50/50">${iCount}</td>
-                        <td class="p-1 border border-slate-300 text-center font-bold text-amber-700 bg-amber-50/50">${sCount}</td>
-                        <td class="p-1 border border-slate-300 text-center font-bold text-rose-700 bg-rose-50/50">${aCount}</td>
-                        <td class="p-1 border border-slate-300 text-center font-bold">${perc}%</td>
-                    </tr>
-                `;
+        function generateAttendanceReport() {
+            const selectedClass = document.getElementById('rekapanClass')?.value || 'Semua Kelas';
+            const month = Number(document.getElementById('rekapanMonth')?.value || new Date().getMonth());
+            const year = Number(document.getElementById('rekapanYear')?.value || new Date().getFullYear());
+            const thead = document.getElementById('rekapanThead');
+            const tbody = document.getElementById('rekapanTbody');
+            const reportSubHeader = document.getElementById('reportSubHeader');
+
+            if (!thead || !tbody) return;
+
+            const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const filteredStudents = selectedClass === 'Semua Kelas'
+                ? [...state.students]
+                : state.students.filter(student => student.kelas === selectedClass);
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const rows = [];
+
+            filteredStudents.forEach(student => {
+                const row = { nama: student.nama, nis: student.nis, records: [] };
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const key = `${dateKey}|${student.kelas}`;
+                    const record = (state.attendance[key] || []).find(item => item.nis === student.nis);
+                    row.records.push(record ? record.status[0] : '-');
+                }
+                rows.push(row);
+            });
+
+            let thHtml = '<tr><th class="border border-slate-300 p-2 text-left bg-slate-100">No</th><th class="border border-slate-300 p-2 text-left bg-slate-100">NIS</th><th class="border border-slate-300 p-2 text-left bg-slate-100">Nama</th>';
+            for (let day = 1; day <= daysInMonth; day++) {
+                thHtml += `<th class="border border-slate-300 p-1 text-center bg-slate-100 w-8">${day}</th>`;
+            }
+            thHtml += '</tr>';
+            thead.innerHTML = thHtml;
+
+            tbody.innerHTML = rows.map((row, index) => {
+                const recordCells = row.records.map(value => {
+                    const statusMap = {
+                        H: '<span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-emerald-500 text-white font-bold">H</span>',
+                        I: '<span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-sky-500 text-white font-bold">I</span>',
+                        S: '<span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-amber-500 text-white font-bold">S</span>',
+                        A: '<span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-rose-500 text-white font-bold">A</span>',
+                        '-': '<span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-200 text-slate-500">-</span>'
+                    };
+                    return `<td class="border border-slate-300 p-1 text-center">${statusMap[value] || value}</td>`;
+                }).join('');
+                return `<tr><td class="border border-slate-300 p-2 text-center">${index + 1}</td><td class="border border-slate-300 p-2">${row.nis}</td><td class="border border-slate-300 p-2">${row.nama}</td>${recordCells}</tr>`;
             }).join('');
+
+            reportSubHeader.textContent = `Kelas: ${selectedClass === 'Semua Kelas' ? 'Semua Kelas' : selectedClass} | Periode: ${monthNames[month]} ${year}`;
         }
 
         function exportToCSV() {
-            const classVal = document.getElementById('rekapanClass').value;
-            const monthVal = parseInt(document.getElementById('rekapanMonth').value);
-            const yearVal = parseInt(document.getElementById('rekapanYear').value);
-            const table = document.getElementById('rekapanTable');
+            const selectedClass = document.getElementById('rekapanClass')?.value || 'Semua Kelas';
+            const month = Number(document.getElementById('rekapanMonth')?.value || new Date().getMonth());
+            const year = Number(document.getElementById('rekapanYear')?.value || new Date().getFullYear());
+            const students = selectedClass === 'Semua Kelas' ? state.students : state.students.filter(student => student.kelas === selectedClass);
 
-            let csv = [];
-            const rows = table.querySelectorAll('tr');
-
-            for (let i = 0; i < rows.length; i++) {
-                const row = [], cols = rows[i].querySelectorAll('td, th');
-                for (let j = 0; j < cols.length; j++) {
-                    row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
-                }
-                csv.push(row.join(','));
+            const monthDays = new Date(year, month + 1, 0).getDate();
+            let csv = 'NIS,Nama Siswa';
+            for (let day = 1; day <= monthDays; day++) {
+                csv += `,${day}`;
             }
+            csv += '\n';
 
-            const csvFile = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            const downloadLink = document.createElement('a');
-            downloadLink.download = `Rekap_Absensi_${classVal}_Bulan_${monthVal + 1}_${yearVal}.csv`;
-            downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = 'none';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            showToast("File rekapan CSV berhasil diunduh!");
-        }
-
-
-        // ================= DATA SISWA CONTROLLER =================
-        function renderSiswaTable() {
-            const searchVal = document.getElementById('searchSiswaInput').value.toLowerCase();
-            const classFilter = document.getElementById('filterMasterClass').value;
-            const tbody = document.getElementById('masterSiswaTbody');
-
-            const filtered = studentsList.filter(s => {
-                const matchClass = (classFilter === 'ALL' || s.kelas === classFilter);
-                const matchSearch = s.nama.toLowerCase().includes(searchVal) || s.nis.toLowerCase().includes(searchVal);
-                return matchClass && matchSearch;
+            students.forEach(student => {
+                let row = `${student.nis},${student.nama}`;
+                for (let day = 1; day <= monthDays; day++) {
+                    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const record = (state.attendance[`${dateKey}|${student.kelas}`] || []).find(item => item.nis === student.nis);
+                    row += `,${record ? record.status[0] : '-'}`;
+                }
+                row += '\n';
+                csv += row;
             });
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Siswa tidak ditemukan.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = filtered.map((s, idx) => `
-                <tr class="hover:bg-slate-50 border-b border-slate-100">
-                    <td class="p-3 text-center text-xs text-slate-500 font-semibold">${idx + 1}</td>
-                    <td class="p-3 font-mono text-xs text-slate-700">${s.nis}</td>
-                    <td class="p-3 font-semibold text-slate-900">${s.nama}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-xs border border-slate-200">${s.kelas}</span></td>
-                    <td class="p-3 text-center text-xs font-semibold ${s.gender === 'L' ? 'text-blue-600' : 'text-pink-600'}">${s.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button onclick="editSiswa('${s.id}')" class="p-1 text-slate-600 hover:text-brand-600 rounded transition" title="Edit">
-                                <i data-lucide="edit-3" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="deleteSiswa('${s.id}')" class="p-1 text-slate-600 hover:text-rose-600 rounded transition" title="Hapus">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-
-            lucide.createIcons();
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.setAttribute('download', `rekap-absensi-${selectedClass.replace(/\s+/g, '-')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
-        function openModalAddSiswa() {
-            document.getElementById('editSiswaId').value = '';
-            document.getElementById('modalSiswaTitle').textContent = 'Tambah Siswa Baru';
-            document.getElementById('formSiswa').reset();
-            document.getElementById('modalSiswa').classList.remove('hidden');
-        }
+        function resetToDefaultSampleData() {
+            const confirmed = confirm('Reset data sampel akan mengembalikan kelas dan siswa awal. Lanjutkan?');
+            if (!confirmed) return;
 
-        function closeModalSiswa() {
-            document.getElementById('modalSiswa').classList.add('hidden');
-        }
-
-        function editSiswa(id) {
-            const siswa = studentsList.find(s => s.id === id);
-            if (!siswa) return;
-
-            document.getElementById('editSiswaId').value = siswa.id;
-            document.getElementById('modalSiswaTitle').textContent = 'Edit Data Siswa';
-            document.getElementById('formNis').value = siswa.nis;
-            document.getElementById('formNama').value = siswa.nama;
-            document.getElementById('formKelas').value = siswa.kelas;
-
-            const radio = document.querySelector(`input[name="formGender"][value="${siswa.gender}"]`);
-            if (radio) radio.checked = true;
-
-            document.getElementById('modalSiswa').classList.remove('hidden');
-        }
-
-        function handleSiswaFormSubmit(e) {
-            e.preventDefault();
-            const editId = document.getElementById('editSiswaId').value;
-            const nis = document.getElementById('formNis').value.trim();
-            const nama = document.getElementById('formNama').value.trim();
-            const kelas = document.getElementById('formKelas').value;
-            const gender = document.querySelector('input[name="formGender"]:checked').value;
-
-            if (editId) {
-                // Update
-                const idx = studentsList.findIndex(s => s.id === editId);
-                if (idx !== -1) {
-                    studentsList[idx] = { id: editId, nis, nama, kelas, gender };
-                    showToast("Data siswa berhasil diperbarui.");
-                }
-            } else {
-                // Add new
-                const newId = Date.now().toString();
-                studentsList.push({ id: newId, nis, nama, kelas, gender });
-                showToast("Siswa baru berhasil ditambahkan.");
-            }
-
-            saveStudentsToStorage();
-            populateClassDropdowns();
-            closeModalSiswa();
+            state.classes = [...DEFAULT_CLASS_OPTIONS];
+            state.students = JSON.parse(JSON.stringify(DEFAULT_STUDENTS));
+            state.attendance = {};
+            localStorage.setItem(STORAGE_KEYS.classes, JSON.stringify(state.classes));
+            localStorage.setItem(STORAGE_KEYS.students, JSON.stringify(state.students));
+            localStorage.setItem(STORAGE_KEYS.attendance, JSON.stringify(state.attendance));
+            renderAllClassSelectors();
             renderSiswaTable();
-            updateDashboardStats();
+            renderDashboardStats();
+            loadAttendanceInputTable();
+            generateAttendanceReport();
+            showToast('Data sampel berhasil direset.', 'success');
         }
 
-        function deleteSiswa(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus data siswa ini?")) {
-                studentsList = studentsList.filter(s => s.id !== id);
-                saveStudentsToStorage();
-                renderSiswaTable();
-                updateDashboardStats();
-                showToast("Data siswa berhasil dihapus.", "info");
-            }
+        function initApp() {
+            loadStoredData();
+            updateDateText();
+            renderAllClassSelectors();
+            renderSiswaTable();
+            renderDashboardStats();
+            generateAttendanceReport();
+            const today = new Date().toISOString().slice(0, 10);
+            document.getElementById('inputAbsensiDate').value = today;
+            document.getElementById('rekapanMonth').value = String(new Date().getMonth());
+            document.getElementById('rekapanYear').value = String(new Date().getFullYear());
+            loadAttendanceInputTable();
+            document.getElementById('inputAbsensiDate').value = today;
+            if (window.lucide) lucide.createIcons();
+            setInterval(updateDateText, 60000);
         }
+
+        window.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
