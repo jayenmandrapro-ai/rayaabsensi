@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raya Absensi | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <div class="brand-mark">RA</div>
+          <div>
+            <p class="brand-label">Admin Panel</p>
+            <h2>Raya Absensi</h2>
+          </div>
+        </div>
+
+        <div class="auth-header">
+          <h3>Login Admin</h3>
+          <p>Masuk untuk mengelola data siswa dan rekap absensi.</p>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="admin@rayaabsensi.com" required />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="Masukkan password" required />
+          </div>
+
+          <div id="loginError" class="login-error hidden"></div>
+
+          <button type="submit" class="btn btn-primary btn-full">Masuk</button>
+        </form>
+
+        <div class="demo-account">
+          <span>Demo admin:</span>
+          <strong>admin@rayaabsensi.com</strong>
+          <strong>admin123</strong>
+        </div>
+      </div>
+    </div>
+
+    <div id="app" class="page-shell hidden">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">RA</div>
+          <div>
+            <p class="brand-label">School System</p>
+            <h2>Raya Absensi</h2>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#" class="nav-item active">Dashboard</a>
+          <a href="#" class="nav-item">Siswa</a>
+          <a href="#" class="nav-item">Absensi</a>
+          <a href="#" class="nav-item">Rekap</a>
+        </nav>
+
+        <div class="sidebar-card">
+          <p class="muted-label">Ringkasan</p>
+          <strong id="totalStudents">0</strong>
+          <span>Jumlah siswa</span>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Monitoring harian</p>
+            <h1>Dashboard Absensi</h1>
+          </div>
+          <div class="topbar-actions">
+            <div class="admin-badge">
+              <span class="admin-dot"></span>
+              <span id="adminName">Admin</span>
+            </div>
+            <button id="logoutBtn" class="btn btn-light">Logout</button>
+            <button id="resetData" class="btn btn-light btn-warning">Reset Data</button>
+          </div>
+        </header>
+
+        <section class="summary-grid">
+          <article class="summary-card success">
+            <div class="card-head">
+              <span class="label">Hadir</span>
+              <span class="dot success-dot"></span>
+            </div>
+            <strong id="hadirCount">0</strong>
+          </article>
+          <article class="summary-card warning">
+            <div class="card-head">
+              <span class="label">Izin</span>
+              <span class="dot warning-dot"></span>
+            </div>
+            <strong id="izinCount">0</strong>
+          </article>
+          <article class="summary-card info">
+            <div class="card-head">
+              <span class="label">Sakit</span>
+              <span class="dot info-dot"></span>
+            </div>
+            <strong id="sakitCount">0</strong>
+          </article>
+          <article class="summary-card danger">
+            <div class="card-head">
+              <span class="label">Alpa</span>
+              <span class="dot danger-dot"></span>
+            </div>
+            <strong id="alpaCount">0</strong>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="panel-kicker">Data siswa</p>
+                <h2>Tambah Siswa Baru</h2>
+              </div>
+            </div>
+
+            <form id="studentForm" class="form-grid">
+              <div class="field">
+                <label for="nama">Nama Siswa</label>
+                <input id="nama" name="nama" type="text" placeholder="Contoh: Rina Putri" required />
+              </div>
+              <div class="field">
+                <label for="nis">NIS</label>
+                <input id="nis" name="nis" type="text" placeholder="Contoh: 1001" required />
+              </div>
+              <div class="field">
+                <label for="kelas">Kelas</label>
+                <input id="kelas" name="kelas" type="text" placeholder="Contoh: X IPA 1" required />
+              </div>
+              <button type="submit" class="btn btn-primary">Simpan Siswa</button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="panel-kicker">Absensi</p>
+                <h2>Absensi Hari Ini</h2>
+              </div>
+              <div class="date-row">
+                <label for="attendanceDate">Tanggal</label>
+                <input id="attendanceDate" type="date" />
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="attendanceTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="actions">
+              <button id="saveAttendance" class="btn btn-primary">Simpan Absensi</button>
+              <button id="exportCsv" class="btn btn-secondary">Unduh CSV</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel recap-panel">
+          <div class="panel-header recap-header">
+            <div>
+              <p class="panel-kicker">Rekap</p>
+              <h2>Rekap Kehadiran</h2>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>NIS</th>
+                  <th>Kelas</th>
+                  <th>Hadir</th>
+                  <th>Izin</th>
+                  <th>Sakit</th>
+                  <th>Alpa</th>
+                  <th>Persentase</th>
+                </tr>
+              </thead>
+              <tbody id="recapTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
